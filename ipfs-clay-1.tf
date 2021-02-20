@@ -1,5 +1,5 @@
 resource "digitalocean_droplet" "ipfs-clay-1" {
-    image = "ubuntu-18-04-x64"
+    image = "ubuntu-20-04-x64"
     name = "ipfs-clay-1"
     region = "sfo3"
     size = "s-1vcpu-1gb"
@@ -18,7 +18,6 @@ resource "digitalocean_droplet" "ipfs-clay-1" {
     provisioner "remote-exec" {
         inline = [
         "export PATH=$PATH:/usr/bin",
-        # install nginx
         "sudo apt-get update",
         "sudo apt-get -y install npm"
         ]
