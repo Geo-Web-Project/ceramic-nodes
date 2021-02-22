@@ -1,7 +1,23 @@
-## Generate Digital Ocean NixOS Image
-
-Only supported from and existing NixOS.
+## Terraform Setup
 
 ```
-nix-build image.nix
+terraform init
+```
+
+## Deploy
+
+1. See plan
+
+```
+terraform plan \
+  -var "do_token=${DO_PAT}" \
+  -var "pvt_key=$HOME/.ssh/terraform"
+```
+
+2. Apply plan
+
+```
+terraform apply \
+  -var "do_token=${DO_PAT}" \
+  -var "pvt_key=$HOME/.ssh/terraform"
 ```
