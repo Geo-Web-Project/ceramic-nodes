@@ -30,3 +30,43 @@ resource "digitalocean_domain" "ipfs_clay_1" {
   name       = "ipfs-clay-1.nodes.geoweb.network"
   ip_address = digitalocean_droplet.ipfs_clay_1.ipv4_address
 }
+
+resource "digitalocean_firewall" "ceramic_firewall" {
+  name = "ceramic-node"
+
+  droplet_ids = [digitalocean_droplet.ipfs_clay_1.id]
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "22"
+    source_addresses = ["192.168.1.0/24", "2002:1:2::/48"]
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "4011"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "7007"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "icmp"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol              = "icmp"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  outbound_rule {
+    protocol         = "tcp"
+    port_range       = "4011"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+}

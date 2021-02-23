@@ -1,0 +1,10 @@
+[Unit]
+Description = Ceramic daemon
+
+[Service]
+Type = simple
+ExecStart = /root/js-ceramic/packages/cli/bin/ceramic.js daemon
+ExecStop = /usr/bin/pkill ceramic
+
+[Install]
+WantedBy = multi-user.target
