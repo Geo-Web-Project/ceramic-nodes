@@ -21,3 +21,11 @@ terraform apply \
   -var "do_token=${DO_PAT}" \
   -var "pvt_key=$HOME/.ssh/terraform"
 ```
+
+## Install Ceramic
+
+```
+git clone https://github.com/ceramicnetwork/js-ceramic.git
+npm run bootstrap
+npm run build
+```
