@@ -26,8 +26,40 @@ resource "digitalocean_droplet" "ipfs_clay_1" {
     }
 }
 
+resource "digitalocean_certificate" "cert" {
+  name    = "ceramicnode"
+  type    = "lets_encrypt"
+  domains = ["ceramic.geoweb.network"]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "digitalocean_loadbalancer" "public" {
+  name   = "ceramic-lb"
+  region = "sfo3"
+
+  forwarding_rule {
+    entry_port     = 443
+    entry_protocol = "https"
+
+    target_port     = 7007
+    target_protocol = "http"
+
+    certificate_name = digitalocean_certificate.cert.name
+  }
+
+  healthcheck {
+    port     = 22
+    protocol = "tcp"
+  }
+
+  droplet_ids = [digitalocean_droplet.ipfs_clay_1.id]
+}
+
 resource "digitalocean_domain" "ipfs_clay_1" {
-  name       = "ipfs-clay-1.nodes.geoweb.network"
+  name       = "ipfs-clay-1.ceramic.geoweb.network"
   ip_address = digitalocean_droplet.ipfs_clay_1.ipv4_address
 }
 
@@ -60,13 +92,14 @@ resource "digitalocean_firewall" "ceramic_firewall" {
   }
 
   outbound_rule {
-    protocol              = "icmp"
+    protocol              = "tcp"
+    port_range            =  "1-65535" 
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 
   outbound_rule {
-    protocol         = "tcp"
-    port_range       = "4011"
+    protocol              = "udp"
+    port_range            =  "1-65535" 
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
