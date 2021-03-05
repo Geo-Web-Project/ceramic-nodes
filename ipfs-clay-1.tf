@@ -82,6 +82,12 @@ resource "digitalocean_firewall" "ceramic_firewall" {
 
   inbound_rule {
     protocol         = "tcp"
+    port_range       = "4012"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
     port_range       = "7007"
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
