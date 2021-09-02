@@ -9,6 +9,7 @@ in {
     environment.systemPackages = [ pkgs.ipfs_0_8 ];
 
     networking.hostName = "ipfs-preload";
+    networking.firewall.allowedTCPPorts = [ 80 ];
     
     # Users
     users.users.ipfs = {

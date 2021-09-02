@@ -17,6 +17,12 @@ resource "digitalocean_droplet" "ipfs-preload" {
     }
 }
 
+resource "digitalocean_domain" "ipfs_preload" {
+  name       = "preload.ipfs.geoweb.network"
+  ip_address = digitalocean_droplet.ipfs-preload.ipv4_address
+}
+
+
 resource "digitalocean_firewall" "ipfs_firewall" {
   name = "ipfs"
 
@@ -25,6 +31,12 @@ resource "digitalocean_firewall" "ipfs_firewall" {
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "80"
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
 
