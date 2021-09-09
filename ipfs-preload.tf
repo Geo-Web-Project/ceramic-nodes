@@ -17,11 +17,48 @@ resource "digitalocean_droplet" "ipfs-preload" {
     }
 }
 
-resource "digitalocean_domain" "ipfs_preload" {
-  name       = "preload.ipfs.geoweb.network"
+resource "digitalocean_domain" "ipfs" {
+  name       = "ipfs.geoweb.network"
   ip_address = digitalocean_droplet.ipfs-preload.ipv4_address
 }
 
+
+resource "digitalocean_domain" "ipfs-preload" {
+  name       = "preload.ipfs.geoweb.network"
+  ip_address = digitalocean_loadbalancer.public.ip
+}
+
+resource "digitalocean_certificate" "cert" {
+  name    = "ipfs-preload"
+  type    = "lets_encrypt"
+  domains = ["preload.ipfs.geoweb.network"]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "digitalocean_loadbalancer" "public" {
+  name   = "ipfs-preload-lb"
+  region = "sfo3"
+
+  forwarding_rule {
+    entry_port     = 443
+    entry_protocol = "https"
+
+    target_port     = 80
+    target_protocol = "http"
+
+    certificate_name = digitalocean_certificate.cert.name
+  }
+
+  healthcheck {
+    port     = 22
+    protocol = "tcp"
+  }
+
+  droplet_ids = [digitalocean_droplet.ipfs-preload.id]
+}
 
 resource "digitalocean_firewall" "ipfs_firewall" {
   name = "ipfs"
