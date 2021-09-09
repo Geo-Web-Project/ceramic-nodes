@@ -26,38 +26,6 @@ resource "digitalocean_droplet" "ipfs_clay_1" {
     }
 }
 
-resource "digitalocean_certificate" "cert" {
-  name    = "ceramicnode"
-  type    = "lets_encrypt"
-  domains = ["ceramic.geoweb.network"]
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "digitalocean_loadbalancer" "public" {
-  name   = "ceramic-lb"
-  region = "sfo3"
-
-  forwarding_rule {
-    entry_port     = 443
-    entry_protocol = "https"
-
-    target_port     = 7007
-    target_protocol = "http"
-
-    certificate_name = digitalocean_certificate.cert.name
-  }
-
-  healthcheck {
-    port     = 22
-    protocol = "tcp"
-  }
-
-  droplet_ids = [digitalocean_droplet.ipfs_clay_1.id]
-}
-
 resource "digitalocean_domain" "ipfs_clay_1" {
   name       = "ipfs-clay-1.ceramic.geoweb.network"
   ip_address = digitalocean_droplet.ipfs_clay_1.ipv4_address

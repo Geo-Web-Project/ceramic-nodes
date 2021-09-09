@@ -1,3 +1,5 @@
+# Terraform
+
 ## Terraform Setup
 
 ```
@@ -29,3 +31,7 @@ git clone https://github.com/ceramicnetwork/js-ceramic.git
 npm run bootstrap
 npm run build
 ```
+
+# NixOS
+
+The `ipfs-preload` is a NixOS image. Nix configurations live in [./nix](./nix) and can be updated manually over SSH.
