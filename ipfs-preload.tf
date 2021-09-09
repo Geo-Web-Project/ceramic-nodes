@@ -2,7 +2,7 @@ resource "digitalocean_droplet" "ipfs-preload" {
     image = 78848161
     name = "ipfs-preload"
     region = "sfo3"
-    size = "s-1vcpu-1gb"
+    size = "s-1vcpu-2gb"
     private_networking = true
     backups = false
     ssh_keys = [
