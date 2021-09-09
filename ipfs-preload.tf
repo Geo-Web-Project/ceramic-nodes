@@ -52,6 +52,16 @@ resource "digitalocean_loadbalancer" "public" {
     certificate_name = digitalocean_certificate.cert.name
   }
 
+  forwarding_rule {
+    entry_port     = 4002
+    entry_protocol = "https"
+
+    target_port     = 4002
+    target_protocol = "http"
+
+    certificate_name = digitalocean_certificate.cert.name
+  }
+
   healthcheck {
     port     = 22
     protocol = "tcp"
@@ -74,6 +84,12 @@ resource "digitalocean_firewall" "ipfs_firewall" {
   inbound_rule {
     protocol         = "tcp"
     port_range       = "4001"
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "4002"
     source_addresses = ["0.0.0.0/0", "::/0"]
   }
 
