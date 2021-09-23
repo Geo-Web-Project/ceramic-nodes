@@ -24,6 +24,9 @@ in {
                 Type = "simple";
                 User = "ipfs";
                 ExecStart = "${pkgs.ipfs_0_8}/bin/ipfs daemon";
+                ExecStop = "${pkgs.procps}/bin/pkill ipfs";
+                Restart = "on-failure";
+                RestartSec = "5s";
             };
             wantedBy = [ "multi-user.target" ];
         };
